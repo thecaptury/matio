@@ -368,8 +368,7 @@ esac
 AM_CONDITIONAL(LINUX, test "x$linux" = "xyes")
 AM_CONDITIONAL(WINNT, test "x$winnt" = "xyes")
 AM_CONDITIONAL(SUN,   test "x$sun"   = "xyes")
-
-AM_CONDITIONAL(ENABLE_FORTRAN, test "$enable_fortran" = "yes" )
+AM_CONDITIONAL(ENABLE_FORTRAN, test x"$enable_fortran" = x"yes" )
 
 dnl
 dnl Without this, the linker line is incorrect on platforms without a fortran

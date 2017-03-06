@@ -46,21 +46,22 @@ lib_LTLIBRARIES        = libmatio.la
 libmatio_la_SOURCES    = snprintf.c endian.c io.c $(ZLIB_SRC) read_data.c \
                          mat5.c mat4.c mat.c matvar_cell.c matvar_struct.c
 libmatio_la_LIBADD     = $(HDF5_LIBS) $(ZLIB_LIBS)
-libmatio_la_LDFLAGS    = -no-undefined -export-symbols @srcdir@/matio.sym $(AM_LDFLAGS)
 
 if MAT73
-    libmatio_la_SOURCES+= mat73.c
+    libmatio_la_SOURCES += mat73.c
 endif
 
 EXTRA_DIST = matio.sym
 
 if ENABLE_FORTRAN
-AM_FCFLAGS              = -I. -I$(top_builddir)/src/fortran
-AM_LDFLAGS             +=  $(FCLDFLAGS)
-libmatio_la_SOURCES    +=  fortran/matio_internal.c fortran/matio.f90
-nodist_include_HEADERS +=  $(top_builddir)/src/matio.mod
-noinst_HEADERS         += fortran/create.f90 fortran/read_data.f90 \
-                          fortran/write_data.f90 fortran/write.f90
+    AM_FCFLAGS              = -I. -I$(top_builddir)/src/fortran
+    AM_LDFLAGS             += $(FCLDFLAGS)
+    libmatio_la_SOURCES    += fortran/matio_internal.c fortran/matio.f90
+    nodist_include_HEADERS += $(top_builddir)/src/matio.mod
+    noinst_HEADERS         += fortran/create.f90 fortran/read_data.f90 \
+                              fortran/write_data.f90 fortran/write.f90
+else
+    libmatio_la_LDFLAGS     = -no-undefined -export-symbols @srcdir@/matio.sym $(AM_LDFLAGS)
 endif
 
 dosubst = sed -e 's,[@]PACKAGE[@],$(PACKAGE),g' \
@@ -68,14 +69,14 @@ dosubst = sed -e 's,[@]PACKAGE[@],$(PACKAGE),g' \
               -e 's,\/,\\,g'
 
 doc:
-	
+    
 
 print:
-	@list='$(libmatio_a_SOURCES)'; \
-	rm -f libmatio.ps; \
-	curdir=`pwd`; \
-	cd $(srcdir); \
-	for f in $$list; do \
-	    enscript -2 -G -r -Ec --color -o - $$f >> $$curdir/libmatio.ps;\
-	done; \
-	cd $$curdir
+    @list='$(libmatio_a_SOURCES)'; \
+    rm -f libmatio.ps; \
+    curdir=`pwd`; \
+    cd $(srcdir); \
+    for f in $$list; do \
+        enscript -2 -G -r -Ec --color -o - $$f >> $$curdir/libmatio.ps;\
+    done; \
+    cd $$curdir
