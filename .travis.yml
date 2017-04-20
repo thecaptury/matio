@@ -137,7 +137,7 @@ install:
 
 before_script:
   - ./autogen.sh
-  - ./configure --quiet --enable-shared --enable-coverage --enable-debug --enable-mat73=$ENABLE_MAT73 --enable-extended-sparse=$ENABLE_EXTENDED_SPARSE --with-zlib=$WITH_ZLIB --with-pic --with-hdf5=$TRAVIS_BUILD_DIR/$HDF5_VERSION_DIR/hdf5
+  - ./configure --enable-shared --enable-coverage --enable-debug --enable-mat73=$ENABLE_MAT73 --enable-extended-sparse=$ENABLE_EXTENDED_SPARSE --with-zlib=$WITH_ZLIB --with-pic --with-hdf5=$TRAVIS_BUILD_DIR/$HDF5_VERSION_DIR/hdf5
 
 script:
   - if [[ "$COVERITY_SCAN_BRANCH" != 1 ]]; then make; fi
