@@ -60,6 +60,11 @@ AC_ARG_ENABLE(coverage,
 [  --enable-coverage       Enable coverage testing],
 [CFLAGS="$CFLAGS -fprofile-arcs -ftest-coverage"])
 
+AC_ARG_ENABLE(sanitize,
+[  --enable-sanitize       Enable address sanitizer],
+[CFLAGS="$CFLAGS -fsanitize=address -fno-omit-frame-pointer"
+LDFLAGS="$LDFLAGS -fsanitize=address -fno-omit-frame-pointer"])
+
 dnl
 dnl Check whether to build in debug mode
 dnl
