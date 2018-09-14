@@ -857,16 +857,16 @@ WriteCompressedEmptyData(mat_t *mat,z_streamp z,int N,
     do { \
         int i, j; \
         long pos, row_stride, col_stride, pos2; \
-        row_stride = (stride[0]-1)*data_size; \
-        col_stride = stride[1]*dims[0]*data_size; \
-        (void)fseek((FILE*)mat->fp,start[1]*dims[0]*data_size,SEEK_CUR); \
+        row_stride = (long)(stride[0]-1)*data_size; \
+        col_stride = (long)stride[1]*dims[0]*data_size; \
+        (void)fseek((FILE*)mat->fp,(long)start[1]*dims[0]*data_size,SEEK_CUR); \
         for ( i = 0; i < edge[1]; i++ ) { \
             pos = ftell((FILE*)mat->fp); \
             if ( pos == -1L ) { \
                 Mat_Critical("Couldn't determine file position"); \
                 return -1; \
             } \
-            (void)fseek((FILE*)mat->fp,start[0]*data_size,SEEK_CUR); \
+            (void)fseek((FILE*)mat->fp,(long)start[0]*data_size,SEEK_CUR); \
             for ( j = 0; j < edge[0]; j++ ) { \
                 fwrite(ptr++,data_size,1,(FILE*)mat->fp); \
                 (void)fseek((FILE*)mat->fp,row_stride,SEEK_CUR); \
@@ -901,7 +901,8 @@ int
 WriteDataSlab2(mat_t *mat,void *data,enum matio_types data_type,size_t *dims,
     int *start,int *stride,int *edge)
 {
-    int nBytes = 0, data_size;
+    int nBytes = 0;
+    size_t data_size;
 
     if ( (mat   == NULL) || (data   == NULL) || (mat->fp == NULL) ||
          (start == NULL) || (stride == NULL) || (edge    == NULL) ) {
@@ -914,7 +915,34 @@ WriteDataSlab2(mat_t *mat,void *data,enum matio_types data_type,size_t *dims,
         case MAT_T_DOUBLE:
         {
             double *ptr = (double *)data;
-            WRITE_DATA_SLAB2;
+    do {
+        int i, j;
+        long pos, row_stride, col_stride, pos2;
+        row_stride = (long)(stride[0]-1)*data_size;
+        col_stride = (long)stride[1]*dims[0]*data_size;
+        (void)fseek((FILE*)mat->fp,(long)start[1]*dims[0]*data_size,SEEK_CUR);
+        for ( i = 0; i < edge[1]; i++ ) {
+            pos = ftell((FILE*)mat->fp);
+            if ( pos == -1L ) {
+                Mat_Critical("Couldn't determine file position");
+                return -1;
+            }
+            (void)fseek((FILE*)mat->fp,(long)start[0]*data_size,SEEK_CUR);
+            for ( j = 0; j < edge[0]; j++ ) {
+                fwrite(ptr++,data_size,1,(FILE*)mat->fp);
+                (void)fseek((FILE*)mat->fp,row_stride,SEEK_CUR);
+            }
+            pos2 = ftell((FILE*)mat->fp);
+            if ( pos2 == -1L ) {
+                Mat_Critical("Couldn't determine file position");
+                return -1;
+            }
+            pos +=col_stride-pos2;
+            (void)fseek((FILE*)mat->fp,pos,SEEK_CUR);
+        }
+    }
+    while (0);
+
             break;
         }
         case MAT_T_SINGLE:
