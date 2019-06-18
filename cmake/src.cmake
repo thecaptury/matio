@@ -54,9 +54,15 @@ if(HDF5_FOUND)
 endif()
 
 if(ZLIB_FOUND)
-  target_link_libraries(matio
-      PUBLIC ZLIB::ZLIB
-  )
+  if(CMAKE_VERSION VERSION_LESS 3.6.2)
+    target_link_libraries(matio
+        PUBLIC ZLIB_LIBRARY
+    )
+  else()
+    target_link_libraries(matio
+        PUBLIC ZLIB::ZLIB
+    )
+  endif()
 endif()
 
 # XXX not sure it's the right thing to do...
