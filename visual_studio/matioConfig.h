@@ -45,7 +45,11 @@
 #undef FC_FUNC_
 
 /* Define to 1 if you have the `asprintf' function. */
+#if defined(WIN32)
 #undef HAVE_ASPRINTF
+#else
+#define HAVE_ASPRINTF 1
+#endif
 
 /* Define to 1 if you have the <dlfcn.h> header file. */
 #undef HAVE_DLFCN_H
@@ -65,7 +69,11 @@
 #endif
 
 /* Define to 1 if you have the `m' library (-lm). */
+#if defined(WIN32)
 #undef HAVE_LIBM
+#else
+#define HAVE_LIBM 1
+#endif
 
 /* Define to 1 if you have the `localeconv' function. */
 #define HAVE_LOCALECONV 1
@@ -118,7 +126,7 @@
 #define HAVE_PTRDIFF_T 1
 
 /* Define to 1 if you have a C99 compliant `snprintf' function. */
-#if defined(_MSC_VER) && _MSC_VER >= 1900
+#if !defined(WIN32) || (defined(_MSC_VER) && _MSC_VER >= 1900)
 #define HAVE_SNPRINTF 1
 #else
 #undef HAVE_SNPRINTF
@@ -131,7 +139,7 @@
 #define HAVE_STDDEF_H 1
 
 /* Define to 1 if you have the <stdint.h> header file. */
-#if defined(_MSC_VER) && _MSC_VER >= 1600
+#if !defined(WIN32) || (defined(_MSC_VER) && _MSC_VER >= 1600)
 #define HAVE_STDINT_H 1
 #else
 #undef HAVE_STDINT_H
@@ -153,10 +161,18 @@
 #define HAVE_STRUCT_LCONV_THOUSANDS_SEP 1
 
 /* Define to 1 if you have the <sys/stat.h> header file. */
+#if defined(WIN32)
 #undef HAVE_SYS_STAT_H
+#else
+#define HAVE_SYS_STAT_H 1
+#endif
 
 /* Define to 1 if you have the <sys/types.h> header file. */
+#if defined(WIN32)
 #undef HAVE_SYS_TYPES_H
+#else
+#define HAVE_SYS_TYPES_H 1
+#endif
 
 /* Define to 1 if the system has the type `uintmax_t'. */
 #if defined(_MSC_VER) && _MSC_VER >= 1600
@@ -169,7 +185,11 @@
 #define HAVE_UINTPTR_T 1
 
 /* Define to 1 if you have the <unistd.h> header file. */
+#if defined(WIN32)
 #undef HAVE_UNISTD_H
+#else
+#define HAVE_UNISTD_H 1
+#endif
 
 /* Define to 1 if the system has the type `unsigned long long int'. */
 #if defined(_MSC_VER) && _MSC_VER >= 1300
@@ -182,10 +202,14 @@
 #define HAVE_VARARGS_H 1
 
 /* Define to 1 if you have the `vasprintf' function. */
+#if defined(_GNU_SOURCE)
+#define HAVE_VASPRINTF 1
+#else
 #undef HAVE_VASPRINTF
+#endif
 
 /* Define to 1 if you have the `va_copy' function or macro. */
-#if defined(_MSC_VER) && _MSC_VER >= 1800
+#if !defined(WIN32) || (defined(_MSC_VER) && _MSC_VER >= 1800)
 #define HAVE_VA_COPY 1
 #else
 #undef HAVE_VA_COPY
@@ -199,10 +223,18 @@
 #endif
 
 /* Define to 1 if you have the `__va_copy' function or macro. */
+#if defined(WIN32)
 #undef HAVE___VA_COPY
+#else
+#define HAVE___VA_COPY 1
+#endif
 
 /* OS is Linux */
+#if defined(WIN32)
 #undef LINUX
+#else
+#define LINUX 1
+#endif
 
 /* Define to the sub-directory in which libtool stores uninstalled libraries.
    */
@@ -213,6 +245,8 @@
 #   define MATIO_PLATFORM "x86_64-pc-windows"
 #elif defined(_WIN32)
 #   define MATIO_PLATFORM "i686-pc-windows"
+#else
+#   define MATIO_PLATFORM "x86_64-gnu-linux"
 #endif
 
 /* Debug disabled */
@@ -252,10 +286,10 @@
 #define SIZEOF_INT 4
 
 /* The size of `long', as computed by sizeof. */
-#define SIZEOF_LONG 4
+#define SIZEOF_LONG sizeof(long)
 
 /* The size of `long long', as computed by sizeof. */
-#define SIZEOF_LONG_LONG 8
+#define SIZEOF_LONG_LONG sizeof(long long)
 
 /* The size of `short', as computed by sizeof. */
 #define SIZEOF_SHORT 2
@@ -270,6 +304,9 @@
 #   define SIZEOF_VOID_P 4
     /* The size of `size_t', as computed by sizeof. */
 #    define SIZEOF_SIZE_T 4
+#else
+#    define SIZEOF_VOID_P 8
+#    define SIZEOF_SIZE_T sizeof(size_t)
 #endif
 
 /* Define to 1 if you have the ANSI C header files. */
