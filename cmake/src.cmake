@@ -48,20 +48,24 @@ if(HDF5_FOUND)
     target_link_libraries(matio
       PUBLIC hdf5::hdf5-static)
   else()
-    target_link_libraries(matio
-      PUBLIC HDF5::HDF5)
+    if(CMAKE_VERSION VERSION_LESS 3.6.2)
+      target_link_libraries(matio
+          PUBLIC HDF5_hdf5_LIBRARY_RELEASE
+      )
+    else()
+      target_link_libraries(matio
+        PUBLIC HDF5::HDF5)
+    endif()
   endif()
 endif()
 
 if(ZLIB_FOUND)
   if(CMAKE_VERSION VERSION_LESS 3.6.2)
     target_link_libraries(matio
-        PUBLIC ZLIB_LIBRARY
-    )
+        PUBLIC ZLIB_LIBRARY)
   else()
     target_link_libraries(matio
-        PUBLIC ZLIB::ZLIB
-    )
+        PUBLIC ZLIB::ZLIB)
   endif()
 endif()
 
