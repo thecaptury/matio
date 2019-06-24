@@ -6,7 +6,7 @@ project( matio
          LANGUAGES C CXX #Fortran
 )
 
-set(CMAKE_BUILD_TYPE Release CACHE STRING "Choose the type of build." FORCE)
+#set(CMAKE_BUILD_TYPE Release CACHE STRING "Choose the type of build." FORCE)
 
 # Installation options
 include(GNUInstallDirs)
