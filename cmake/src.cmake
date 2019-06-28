@@ -43,14 +43,14 @@ else()
   set_target_properties(matio PROPERTIES OUTPUT_NAME libmatio)
 endif()
 
-if(HDF5_FOUND)
+if(HDF5_FOUND AND MAT73)
   if(WIN32)
     target_link_libraries(matio
       PUBLIC hdf5::hdf5-static)
   else()
     if(CMAKE_VERSION VERSION_LESS 3.6.2)
       target_link_libraries(matio
-          PUBLIC HDF5_hdf5_LIBRARY_RELEASE
+          PUBLIC ${HDF5_hdf5_LIBRARY_RELEASE}
       )
     else()
       target_link_libraries(matio
@@ -62,7 +62,7 @@ endif()
 if(ZLIB_FOUND)
   if(CMAKE_VERSION VERSION_LESS 3.6.2)
     target_link_libraries(matio
-        PUBLIC ZLIB_LIBRARY)
+        PUBLIC ${ZLIB_LIBRARY})
   else()
     target_link_libraries(matio
         PUBLIC ZLIB::ZLIB)
